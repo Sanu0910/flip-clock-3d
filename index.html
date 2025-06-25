@@ -296,8 +296,19 @@
 </head>
 <body>
     <!-- Background Music Element -->
-    <audio id="background-music" loop src="clear-water-239684.mp3"></audio>
+   <audio id="background-music" loop></audio>
 
+<div class="controls-container">
+    <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
+    <button id="music-toggle" class="theme-button" aria-label="Toggle music"></button>
+    <select id="music-selector" class="theme-button">
+        <option value="clear-water-239684.mp3">Water</option>
+        <option value="evening-by-the-sea-364906.mp3">Evening By the sea</option>
+        <option value="lost-in-dreams-abstract-chill-downtempo-cinematic-future-beats-270241.mp3">Dream</option>
+        <option value="melody-of-nature-main-6672.mp3">Nature</option>
+        <option value="night-sky-lofi-156772.mp3">Night Sky</option>
+    </select>
+</div>
     <div class="background-waves">
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
