@@ -288,3 +288,66 @@ body {
      .date-display { font-size: 0.9rem; padding: 0.5rem 1rem; }
      .quote { font-size: 0.8rem; }
 }
+
+/* Styles for Music Selection */
+.music-selection-container {
+    /* display: none; /* Initially hidden - JavaScript will toggle this */
+    /* Using flex here and in JS, but could be block if preferred */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Space between song items */
+    padding: 1rem;
+    border-radius: 1.5rem; /* Softer radius, similar to clock container */
+    background: var(--bg-color);
+    box-shadow: 9px 9px 16px var(--primary-shadow), -9px -9px 16px var(--secondary-shadow);
+    margin-top: 1.5rem; /* Space below the main controls */
+    width: 280px; /* Fixed width, or use max-width and width: 100% for responsiveness */
+    max-width: 90%; /* Ensure it doesn't overflow on small screens */
+    align-items: stretch; /* Stretch items to fill width */
+    transition: all var(--transition-speed) ease, opacity 0.5s ease, transform 0.5s ease;
+    z-index: 10; /* Ensure it's above wave background etc. */
+    /* For initial hidden state handled by JS, but good for fallback if JS fails or for animations */
+    /* opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none; */
+}
+
+/* .music-selection-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+} */
+
+.music-item-button {
+    width: 100%; /* Make buttons fill container width */
+    padding: 0.75rem 1rem;
+    border-radius: 1rem; /* Rounded corners for buttons */
+    background: var(--bg-color); /* Neumorphic base */
+    box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-active); /* Use active text color for readability */
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    transition: all var(--transition-speed) ease;
+}
+
+.music-item-button:hover {
+    /* Slightly more pronounced shadow on hover */
+    box-shadow: 7px 7px 12px var(--primary-shadow), -7px -7px 12px var(--secondary-shadow);
+    /* color: var(--text-color-active); Maintain active color or a slightly different shade if desired */
+}
+
+.music-item-button:active {
+    /* Inset shadow for pressed effect */
+    box-shadow: inset 5px 5px 10px var(--primary-shadow), inset -5px -5px 10px var(--secondary-shadow);
+    color: var(--text-color); /* Slightly muted text color when pressed */
+}
+
+/* Adjustments for controls container to better accommodate multiple buttons */
+.controls-container {
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line on smaller screens */
+    justify-content: center; /* Center buttons if they wrap */
+}
