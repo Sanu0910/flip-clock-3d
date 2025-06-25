@@ -1,5 +1,5 @@
 :root {
-    /* Light Theme */
+    /* Default Theme: Light */
     --bg-color: #e0e5ec;
     --primary-shadow: #a3b1c6;
     --secondary-shadow: #ffffff;
@@ -10,14 +10,15 @@
     --tumbler-shadow-inset2: #ffffff;
     --highlight-bg: #e0e5ec;
     --tick-bg: #a3b1c6;
-    --wave-color: #d1d9e6;
+    --wave-color: #d1d9e6; /* Used by JS for the 4th wave */
+
     --tumbler-height: 100px;
     --tumbler-font-size: 3rem;
     --transition-speed: 0.3s;
 }
 
-body.dark {
-    /* Dark Theme */
+/* Theme: Dark */
+body.theme-dark {
     --bg-color: #2c2f33;
     --primary-shadow: #1e2022;
     --secondary-shadow: #3a3e44;
@@ -29,6 +30,81 @@ body.dark {
     --highlight-bg: #2c2f33;
     --tick-bg: #6a717a;
     --wave-color: #232528;
+}
+
+/* Theme: Forest */
+body.theme-forest {
+    --bg-color: #DCE5DC;
+    --primary-shadow: #b8c0b8;
+    --secondary-shadow: #feffff;
+    --text-color: #5a705a;
+    --text-color-active: #2F4F2F;
+    --tumbler-bg: linear-gradient(145deg, #c2ccc2, #f6fff6);
+    --tumbler-shadow-inset1: #b6beb6;
+    --tumbler-shadow-inset2: #ffffff;
+    --highlight-bg: #DCE5DC;
+    --tick-bg: #9EAE9E;
+    --wave-color: #B0C0B0;
+}
+
+/* Theme: Ocean */
+body.theme-ocean {
+    --bg-color: #E0F2F7;
+    --primary-shadow: #b0d0d9;
+    --secondary-shadow: #ffffff;
+    --text-color: #5A9BAB;
+    --text-color-active: #2A6E85;
+    --tumbler-bg: linear-gradient(145deg, #c6e8ef, #faffff);
+    --tumbler-shadow-inset1: #badbdd;
+    --tumbler-shadow-inset2: #ffffff;
+    --highlight-bg: #E0F2F7;
+    --tick-bg: #8ABAD3;
+    --wave-color: #ADD8E6;
+}
+
+/* Theme: Sunset */
+body.theme-sunset {
+    --bg-color: #FFEEE4;
+    --primary-shadow: #d9c9be;
+    --secondary-shadow: #ffffff;
+    --text-color: #D9825F;
+    --text-color-active: #B85C3A;
+    --tumbler-bg: linear-gradient(145deg, #ffdac9, #fffefe);
+    --tumbler-shadow-inset1: #e0c2b3;
+    --tumbler-shadow-inset2: #ffffff;
+    --highlight-bg: #FFEEE4;
+    --tick-bg: #E5A88C;
+    --wave-color: #FFC09F;
+}
+
+/* Theme: Lavender */
+body.theme-lavender {
+    --bg-color: #EAE6F0;
+    --primary-shadow: #c4c0c9;
+    --secondary-shadow: #ffffff;
+    --text-color: #8A7F99;
+    --text-color-active: #5C4D6B;
+    --tumbler-bg: linear-gradient(145deg, #d0cce0, #fffaff);
+    --tumbler-shadow-inset1: #c1bacf;
+    --tumbler-shadow-inset2: #ffffff;
+    --highlight-bg: #EAE6F0;
+    --tick-bg: #A99DBA;
+    --wave-color: #D8BFD8;
+}
+
+/* Theme: Monochrome */
+body.theme-monochrome {
+    --bg-color: #BEBEBE;
+    --primary-shadow: #9e9e9e;
+    --secondary-shadow: #dedede;
+    --text-color: #505050;
+    --text-color-active: #202020;
+    --tumbler-bg: linear-gradient(145deg, #a5a5a5, #d9d9d9);
+    --tumbler-shadow-inset1: #9c9c9c;
+    --tumbler-shadow-inset2: #e0e0e0;
+    --highlight-bg: #BEBEBE;
+    --tick-bg: #707070;
+    --wave-color: #A0A0A0;
 }
 
 body {
@@ -315,3 +391,47 @@ body {
 
 /* Styles for Music Selection dropdown - REMOVED */
 /* All styles for .music-selection-container and .music-item-button have been removed. */
+
+/* Styling for the new theme selector dropdown */
+#theme-selector {
+    -webkit-appearance: none; /* Remove default Sýwebkit/Chromium appearance */
+    -moz-appearance: none; /* Remove default Firefox appearance */
+    appearance: none; /* Remove default appearance for other browsers */
+
+    /* Inherit some styles from .theme-button for consistency */
+    font-family: 'Inter', sans-serif;
+    /* font-size: 0.9rem; /* Let's use a slightly smaller font if it's text */
+    /* width: auto; Let width be determined by content or a fixed value */
+    min-width: 120px; /* Ensure it's wide enough for theme names */
+    height: 50px; /* Match other buttons */
+    padding: 0 1em; /* Add some horizontal padding for text */
+
+    /* Neumorphic styles from .theme-button */
+    background: var(--bg-color);
+    border-radius: 25px; /* Keep consistent with other buttons if height is 50px */
+    box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
+    border: none;
+    color: var(--text-color-active);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+
+    /* Custom dropdown arrow (optional, basic version) */
+    /* This part is tricky and browser-dependent. A simple approach: */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-13z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.7em top 50%, 0 0;
+    background-size: 0.65em auto, 100%;
+    padding-right: 2em; /* Make space for the arrow */
+}
+
+#theme-selector:focus {
+    outline: none;
+    box-shadow: inset 3px 3px 7px var(--primary-shadow), inset -3px -3px 7px var(--secondary-shadow); /* Focus inset shadow */
+}
+
+/* Ensure .theme-button specific styles for actual buttons don't conflict badly with select */
+button.theme-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

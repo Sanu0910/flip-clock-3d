@@ -369,7 +369,7 @@
             <button id="play-pause-music-button" class="theme-button" aria-label="Play/Pause music"></button>
             <button id="next-song-button" class="theme-button" aria-label="Next song"></button>
             <button id="stop-music-button" class="theme-button" aria-label="Stop music"></button>
-            <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
+            <select id="theme-selector" class="theme-button" aria-label="Select theme"></select>
         </div>
 
         <footer class="signature">
@@ -382,12 +382,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             const tumblerWrappers = document.querySelectorAll('.tumbler-wrapper');
             const tumblerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tumbler-height'));
-            const themeSwitcher = document.getElementById('theme-switcher');
-            const musicToggle = document.getElementById('music-toggle');
+            // const themeSwitcher = document.getElementById('theme-switcher'); // Old theme switcher
+            // const musicToggle = document.getElementById('music-toggle'); // Old music toggle
             const backgroundMusic = document.getElementById('background-music');
             const body = document.body;
             const quoteText = document.getElementById('quote-text');
             const dateContainer = document.getElementById('date-container');
+            const themeSelector = document.getElementById('theme-selector'); // New theme selector
 
             const quotes = [
                 { text: "Time is what we want most, but what we use worst.", author: "William Penn" },
@@ -515,24 +516,77 @@
                 }, 1000);
             }
             
-            // Theme Switcher Logic
-            function setTheme(isDark) {
-                 body.classList.toggle('dark', isDark);
-                 themeSwitcher.innerHTML = isDark ? sunIcon : moonIcon;
-                 const waveUses = document.querySelectorAll('.waves .parallax > use');
-                 if(isDark){
-                    waveUses[0].setAttribute('fill', 'rgba(40, 43, 46, 0.7)');
-                    waveUses[1].setAttribute('fill', 'rgba(40, 43, 46, 0.5)');
-                    waveUses[2].setAttribute('fill', 'rgba(40, 43, 46, 0.3)');
-                 } else {
-                    waveUses[0].setAttribute('fill', 'rgba(255,255,255,0.7)');
-                    waveUses[1].setAttribute('fill', 'rgba(255,255,255,0.5)');
-                    waveUses[2].setAttribute('fill', 'rgba(255,255,255,0.3)');
-                 }
+            // --- New Theme Management ---
+            const themes = [
+                { name: "Light", className: "theme-light", waveColors: { wave0: 'rgba(255,255,255,0.7)', wave1: 'rgba(255,255,255,0.5)', wave2: 'rgba(255,255,255,0.3)', wave3CssVar: '--wave-color' } },
+                { name: "Dark", className: "theme-dark", waveColors: { wave0: 'rgba(40, 43, 46, 0.7)', wave1: 'rgba(40, 43, 46, 0.5)', wave2: 'rgba(40, 43, 46, 0.3)', wave3CssVar: '--wave-color' } },
+                { name: "Forest", className: "theme-forest", waveColors: { wave0: 'rgba(176, 192, 176, 0.7)', wave1: 'rgba(176, 192, 176, 0.5)', wave2: 'rgba(176, 192, 176, 0.3)', wave3CssVar: '--wave-color' } },
+                { name: "Ocean", className: "theme-ocean", waveColors: { wave0: 'rgba(173, 216, 230, 0.7)', wave1: 'rgba(173, 216, 230, 0.5)', wave2: 'rgba(173, 216, 230, 0.3)', wave3CssVar: '--wave-color' } },
+                { name: "Sunset", className: "theme-sunset", waveColors: { wave0: 'rgba(255, 192, 159, 0.7)', wave1: 'rgba(255, 192, 159, 0.5)', wave2: 'rgba(255, 192, 159, 0.3)', wave3CssVar: '--wave-color' } },
+                { name: "Lavender", className: "theme-lavender", waveColors: { wave0: 'rgba(216, 191, 216, 0.7)', wave1: 'rgba(216, 191, 216, 0.5)', wave2: 'rgba(216, 191, 216, 0.3)', wave3CssVar: '--wave-color' } },
+                { name: "Monochrome", className: "theme-monochrome", waveColors: { wave0: 'rgba(160, 160, 160, 0.7)', wave1: 'rgba(160, 160, 160, 0.5)', wave2: 'rgba(160, 160, 160, 0.3)', wave3CssVar: '--wave-color' } }
+            ];
+
+            function populateThemeSelector() {
+                themes.forEach(theme => {
+                    const option = document.createElement('option');
+                    option.value = theme.className;
+                    option.textContent = theme.name;
+                    themeSelector.appendChild(option);
+                });
             }
-            themeSwitcher.addEventListener('click', () => setTheme(!body.classList.contains('dark')));
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(prefersDark);
+
+            function applyTheme(themeClassName) {
+                // Remove any existing theme classes
+                body.className = body.className.replace(/\btheme-\w+/g, '').trim();
+                // Add new theme class
+                body.classList.add(themeClassName);
+
+                // Update wave colors
+                const selectedTheme = themes.find(t => t.className === themeClassName);
+                if (selectedTheme) {
+                    const waveUses = document.querySelectorAll('.waves .parallax > use');
+                    if (waveUses.length >= 4) {
+                        waveUses[0].setAttribute('fill', selectedTheme.waveColors.wave0);
+                        waveUses[1].setAttribute('fill', selectedTheme.waveColors.wave1);
+                        waveUses[2].setAttribute('fill', selectedTheme.waveColors.wave2);
+                        // For the 4th wave, its color is defined by the CSS variable --wave-color,
+                        // which is already updated by the theme class on the body.
+                        // We just need to make sure it re-evaluates if it was set directly before.
+                        // Or, more robustly, fetch the current computed style for --wave-color.
+                        const computedWaveColor = getComputedStyle(document.documentElement).getPropertyValue(selectedTheme.waveColors.wave3CssVar).trim();
+                        waveUses[3].setAttribute('fill', computedWaveColor);
+                    }
+                }
+                localStorage.setItem('selectedTheme', themeClassName);
+                themeSelector.value = themeClassName; // Sync dropdown
+            }
+
+            populateThemeSelector();
+
+            themeSelector.addEventListener('change', (event) => {
+                applyTheme(event.target.value);
+            });
+
+            // Load saved theme or apply default
+            const savedTheme = localStorage.getItem('selectedTheme');
+            const defaultTheme = themes[0].className; // Light theme
+
+            let themeToApply = defaultTheme;
+            if (savedTheme && themes.some(t => t.className === savedTheme)) {
+                themeToApply = savedTheme;
+            } else {
+                // Fallback for system preference if no theme is saved and default is light
+                // This part is a bit more complex if we want to exactly mimic old behavior of respecting system for initial default
+                // For now, we'll simplify: saved theme, or explicit default.
+                // const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                // if (themes.find(t => t.className === 'theme-dark') && prefersDark) {
+                //    themeToApply = 'theme-dark';
+                // }
+            }
+            applyTheme(themeToApply);
+            themeSelector.value = themeToApply; // Ensure dropdown is set correctly on load
+
 
             // Create number strips and scales
             tumblerWrappers.forEach(wrapper => {
