@@ -537,10 +537,19 @@
             }
 
             function applyTheme(themeClassName) {
-                // Remove any existing theme classes
-                body.className = body.className.replace(/\btheme-\w+/g, '').trim();
+                console.log('Applying theme:', themeClassName);
+                // More robust class removal:
+                const classesToRemove = [];
+                for (const cls of body.classList) {
+                    if (cls.startsWith('theme-')) {
+                        classesToRemove.push(cls);
+                    }
+                }
+                classesToRemove.forEach(cls => body.classList.remove(cls));
+
                 // Add new theme class
                 body.classList.add(themeClassName);
+                console.log('Body classList after:', ...body.classList); // Log classList
 
                 // Update wave colors
                 const selectedTheme = themes.find(t => t.className === themeClassName);
