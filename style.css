@@ -203,9 +203,13 @@ body {
     transition: all var(--transition-speed) ease;
 }
 
+/* Consolidated .controls-container */
 .controls-container {
     display: flex;
     gap: 1rem;
+    position: relative; /* For positioning the dropdown relative to this container */
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line on smaller screens */
+    justify-content: center; /* Center buttons if they wrap */
 }
 
 .theme-button {
@@ -290,18 +294,13 @@ body {
 }
 
 /* Styles for Music Selection */
-.controls-container {
-    position: relative; /* For positioning the dropdown relative to this container */
-    flex-wrap: wrap; /* Allow buttons to wrap to the next line on smaller screens */
-    justify-content: center; /* Center buttons if they wrap */
-    gap: 1rem; /* Keep the gap definition */
-}
+/* .controls-container is now consolidated above */
 
 .music-selection-container {
     position: absolute;
     top: 100%; /* Position below the controls container */
     left: 50%; /* Center relative to the controls container */
-    transform: translateX(-50%) translateY(-10px); /* Adjust Y for initial animation state */
+    transform: translateX(-50%) translateY(-10px); /* Initial state: slightly up */
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -309,35 +308,36 @@ body {
     border-radius: 1.5rem;
     background: var(--bg-color);
     box-shadow: 9px 9px 16px var(--primary-shadow), -9px -9px 16px var(--secondary-shadow);
-    width: 250px; /* Slightly narrower for a dropdown feel */
+    width: 250px;
     max-width: 80%;
     align-items: stretch;
-    z-index: 20; /* Ensure it's above other elements */
+    z-index: 20;
 
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
-    /* Visibility transition should be immediate when opening */
+    /* Corrected: Delay visibility:hidden on close to allow fade/slide out animation */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
 }
 
 .music-selection-container.open {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(5px); /* Slide down slightly below the button */
+    transform: translateX(-50%) translateY(5px); /* Final open state: slightly down */
     pointer-events: auto;
+    /* On open, visibility should be immediate */
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
 }
 
 .music-item-button {
-    width: 100%; /* Make buttons fill container width */
+    width: 100%;
     padding: 0.75rem 1rem;
-    border-radius: 1rem; /* Rounded corners for buttons */
-    background: var(--bg-color); /* Neumorphic base */
+    border-radius: 1rem;
+    background: var(--bg-color);
     box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
     border: none;
     cursor: pointer;
-    color: var(--text-color-active); /* Use active text color for readability */
+    color: var(--text-color-active);
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
@@ -346,19 +346,12 @@ body {
 }
 
 .music-item-button:hover {
-    /* Slightly more pronounced shadow on hover */
     box-shadow: 7px 7px 12px var(--primary-shadow), -7px -7px 12px var(--secondary-shadow);
-    /* color: var(--text-color-active); Maintain active color or a slightly different shade if desired */
 }
 
 .music-item-button:active {
-    /* Inset shadow for pressed effect */
     box-shadow: inset 5px 5px 10px var(--primary-shadow), inset -5px -5px 10px var(--secondary-shadow);
-    color: var(--text-color); /* Slightly muted text color when pressed */
+    color: var(--text-color);
 }
 
-/* Adjustments for controls container to better accommodate multiple buttons */
-.controls-container {
-    flex-wrap: wrap; /* Allow buttons to wrap to the next line on smaller screens */
-    justify-content: center; /* Center buttons if they wrap */
-}
+/* Redundant .controls-container rule was here, now removed as it's consolidated above */
