@@ -362,17 +362,14 @@
             <p id="quote-text" class="quote"></p>
         </div>
 
+        <div id="current-song-display" class="current-song-display"></div>
+
         <div class="controls-container">
             <button id="previous-song-button" class="theme-button" aria-label="Previous song"></button>
             <button id="play-pause-music-button" class="theme-button" aria-label="Play/Pause music"></button>
             <button id="next-song-button" class="theme-button" aria-label="Next song"></button>
             <button id="stop-music-button" class="theme-button" aria-label="Stop music"></button>
-            <button id="change-music-button" class="theme-button" aria-label="Change music"></button>
             <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
-        </div>
-
-        <div id="music-selection-container" class="music-selection-container">
-            <!-- Music list will be populated here by JavaScript -->
         </div>
 
         <footer class="signature">
@@ -418,8 +415,7 @@
             const previousSongButton = document.getElementById('previous-song-button');
             const nextSongButton = document.getElementById('next-song-button');
             const stopMusicButton = document.getElementById('stop-music-button');
-            const changeMusicButton = document.getElementById('change-music-button');
-            const musicSelectionContainer = document.getElementById('music-selection-container');
+            const currentSongDisplay = document.getElementById('current-song-display'); // Get new display element
 
             // Assign icons to new buttons
             previousSongButton.innerHTML = previousIcon;
@@ -436,27 +432,16 @@
                 { name: "Night Sky Lofi", src: "night-sky-lofi-156772.mp3" }
             ];
 
-            function populateMusicList() {
-                musicSelectionContainer.innerHTML = ''; // Clear existing items
-                songs.forEach((song, index) => { // Added index parameter
-                    const songItem = document.createElement('button');
-                    songItem.classList.add('music-item-button');
-                    songItem.textContent = song.name;
-                    songItem.addEventListener('click', () => {
-                        loadSong(index); // Use index to load the song
-                        playCurrentSong();
-                        musicSelectionContainer.classList.remove('open');
-                    });
-                    musicSelectionContainer.appendChild(songItem);
-                });
-            }
+            // Removed populateMusicList function as it's no longer needed
 
             // --- Music Logic ---
 
             function loadSong(index) {
                 currentSongIndex = index;
                 backgroundMusic.src = songs[currentSongIndex].src;
-                // TODO: Add highlighting for current song in the list if implemented later
+                if (currentSongDisplay) { // Update song name display
+                    currentSongDisplay.textContent = songs[currentSongIndex].name;
+                }
             }
 
             function playCurrentSong() {
@@ -471,14 +456,12 @@
 
             // Initial setup on page load
             if (songs.length > 0) {
-                loadSong(currentSongIndex); // Load the first song
+                loadSong(currentSongIndex); // Load the first song & update display
             }
             playPauseMusicButton.innerHTML = playIcon; // Set initial icon for play/pause button
-            changeMusicButton.innerHTML = changeMusicIcon;
-            musicSelectionContainer.classList.remove('open'); // Ensure dropdown is closed initially
+            // Removed lines related to changeMusicButton and musicSelectionContainer initial state
 
-            // Populate the visual song list
-            populateMusicList();
+            // Removed populateMusicList() call
 
             // --- Event Listeners for Music Controls ---
             playPauseMusicButton.addEventListener('click', () => {
@@ -506,16 +489,8 @@
                 backgroundMusic.currentTime = 0; // Reset track to beginning
             });
 
-            changeMusicButton.addEventListener('click', () => {
-                musicSelectionContainer.classList.toggle('open');
-            });
-
-            // Close dropdown if clicked outside
-            document.addEventListener('click', (event) => {
-                if (!musicSelectionContainer.contains(event.target) && !changeMusicButton.contains(event.target)) {
-                    musicSelectionContainer.classList.remove('open');
-                }
-            });
+            // Removed event listener for changeMusicButton
+            // Removed event listener for closing dropdown on click outside
 
             // Date Logic
             function updateDate() {

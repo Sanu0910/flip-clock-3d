@@ -207,9 +207,9 @@ body {
 .controls-container {
     display: flex;
     gap: 1rem;
-    position: relative; /* For positioning the dropdown relative to this container */
-    flex-wrap: wrap; /* Allow buttons to wrap to the next line on smaller screens */
-    justify-content: center; /* Center buttons if they wrap */
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .theme-button {
@@ -238,7 +238,7 @@ body {
 }
 
 .quote-container {
-    min-height: 4em; /* Reserve space to prevent layout shift */
+    min-height: 4em;
     text-align: center;
     max-width: 90%;
 }
@@ -293,65 +293,25 @@ body {
      .quote { font-size: 0.8rem; }
 }
 
-/* Styles for Music Selection */
-/* .controls-container is now consolidated above */
-
-.music-selection-container {
-    position: absolute;
-    top: 100%; /* Position below the controls container */
-    left: 50%; /* Center relative to the controls container */
-    transform: translateX(-50%) translateY(-10px); /* Initial state: slightly up */
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem;
-    border-radius: 1.5rem;
-    background: var(--bg-color);
-    box-shadow: 9px 9px 16px var(--primary-shadow), -9px -9px 16px var(--secondary-shadow);
-    width: 250px;
-    max-width: 80%;
-    align-items: stretch;
-    z-index: 20;
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    /* Corrected: Delay visibility:hidden on close to allow fade/slide out animation */
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s;
-}
-
-.music-selection-container.open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(5px); /* Final open state: slightly down */
-    pointer-events: auto;
-    /* On open, visibility should be immediate */
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
-}
-
-.music-item-button {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 1rem;
-    background: var(--bg-color);
-    box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
-    border: none;
-    cursor: pointer;
+/* Style for Current Song Display */
+.current-song-display {
     color: var(--text-color-active);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     text-align: center;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    min-height: 1.5em;
+    background: var(--bg-color);
+    border-radius: 15px;
+    box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
+    width: 80%;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     transition: all var(--transition-speed) ease;
 }
 
-.music-item-button:hover {
-    box-shadow: 7px 7px 12px var(--primary-shadow), -7px -7px 12px var(--secondary-shadow);
-}
-
-.music-item-button:active {
-    box-shadow: inset 5px 5px 10px var(--primary-shadow), inset -5px -5px 10px var(--secondary-shadow);
-    color: var(--text-color);
-}
-
-/* Redundant .controls-container rule was here, now removed as it's consolidated above */
+/* Styles for Music Selection dropdown - REMOVED */
+/* All styles for .music-selection-container and .music-item-button have been removed. */
