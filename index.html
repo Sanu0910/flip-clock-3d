@@ -363,9 +363,12 @@
         </div>
 
         <div class="controls-container">
-            <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
+            <button id="previous-song-button" class="theme-button" aria-label="Previous song"></button>
             <button id="play-pause-music-button" class="theme-button" aria-label="Play/Pause music"></button>
+            <button id="next-song-button" class="theme-button" aria-label="Next song"></button>
+            <button id="stop-music-button" class="theme-button" aria-label="Stop music"></button>
             <button id="change-music-button" class="theme-button" aria-label="Change music"></button>
+            <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
         </div>
 
         <div id="music-selection-container" class="music-selection-container">
@@ -406,11 +409,24 @@
             const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
             const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
             const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-            const changeMusicIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><path d="m12 6 3.536 3.536a2 2 0 0 1 0 2.828L12 16"></path></svg>`; // Example, you might want a different icon
+            const previousIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>`;
+            const nextIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>`;
+            const stopIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>`;
+            const changeMusicIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><path d="m12 6 3.536 3.536a2 2 0 0 1 0 2.828L12 16"></path></svg>`;
 
             const playPauseMusicButton = document.getElementById('play-pause-music-button');
+            const previousSongButton = document.getElementById('previous-song-button');
+            const nextSongButton = document.getElementById('next-song-button');
+            const stopMusicButton = document.getElementById('stop-music-button');
             const changeMusicButton = document.getElementById('change-music-button');
             const musicSelectionContainer = document.getElementById('music-selection-container');
+
+            // Assign icons to new buttons
+            previousSongButton.innerHTML = previousIcon;
+            nextSongButton.innerHTML = nextIcon;
+            stopMusicButton.innerHTML = stopIcon;
+
+            let currentSongIndex = 0; // Initialize current song index
 
             const songs = [
                 { name: "Clear Water", src: "clear-water-239684.mp3" },
@@ -422,33 +438,72 @@
 
             function populateMusicList() {
                 musicSelectionContainer.innerHTML = ''; // Clear existing items
-                songs.forEach(song => {
+                songs.forEach((song, index) => { // Added index parameter
                     const songItem = document.createElement('button');
-                    songItem.classList.add('music-item-button'); // Add a class for styling
+                    songItem.classList.add('music-item-button');
                     songItem.textContent = song.name;
                     songItem.addEventListener('click', () => {
-                        backgroundMusic.src = song.src;
-                        backgroundMusic.play();
-                        playPauseMusicButton.innerHTML = pauseIcon;
-                        musicSelectionContainer.classList.remove('open'); // Close dropdown after selection
+                        loadSong(index); // Use index to load the song
+                        playCurrentSong();
+                        musicSelectionContainer.classList.remove('open');
                     });
                     musicSelectionContainer.appendChild(songItem);
                 });
             }
 
             // --- Music Logic ---
-            playPauseMusicButton.innerHTML = playIcon; // Start with play icon as music is initially paused or not playing
-            changeMusicButton.innerHTML = changeMusicIcon; // Set icon for change music button
-            musicSelectionContainer.classList.remove('open'); // Ensure it's closed initially
 
+            function loadSong(index) {
+                currentSongIndex = index;
+                backgroundMusic.src = songs[currentSongIndex].src;
+                // TODO: Add highlighting for current song in the list if implemented later
+            }
+
+            function playCurrentSong() {
+                backgroundMusic.play();
+                playPauseMusicButton.innerHTML = pauseIcon;
+            }
+
+            function pauseCurrentSong() {
+                backgroundMusic.pause();
+                playPauseMusicButton.innerHTML = playIcon;
+            }
+
+            // Initial setup on page load
+            if (songs.length > 0) {
+                loadSong(currentSongIndex); // Load the first song
+            }
+            playPauseMusicButton.innerHTML = playIcon; // Set initial icon for play/pause button
+            changeMusicButton.innerHTML = changeMusicIcon;
+            musicSelectionContainer.classList.remove('open'); // Ensure dropdown is closed initially
+
+            // Populate the visual song list
+            populateMusicList();
+
+            // --- Event Listeners for Music Controls ---
             playPauseMusicButton.addEventListener('click', () => {
                 if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                    playPauseMusicButton.innerHTML = pauseIcon;
+                    playCurrentSong();
                 } else {
-                    backgroundMusic.pause();
-                    playPauseMusicButton.innerHTML = playIcon;
+                    pauseCurrentSong();
                 }
+            });
+
+            nextSongButton.addEventListener('click', () => {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+                loadSong(currentSongIndex);
+                playCurrentSong();
+            });
+
+            previousSongButton.addEventListener('click', () => {
+                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+                loadSong(currentSongIndex);
+                playCurrentSong();
+            });
+
+            stopMusicButton.addEventListener('click', () => {
+                pauseCurrentSong(); // Sets icon to play
+                backgroundMusic.currentTime = 0; // Reset track to beginning
             });
 
             changeMusicButton.addEventListener('click', () => {
@@ -461,13 +516,6 @@
                     musicSelectionContainer.classList.remove('open');
                 }
             });
-
-            // Initialize music
-            if (songs.length > 0) {
-                 backgroundMusic.src = songs[0].src; // Set default song
-            }
-            populateMusicList();
-
 
             // Date Logic
             function updateDate() {
