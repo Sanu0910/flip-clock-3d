@@ -1,21 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Striped Clock</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanu's Tumbler Clock</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Link to your external CSS file -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="clock">
-    <div class="digit-column" id="h1"></div>
-    <div class="digit-column" id="h2"></div>
-    <div class="colon">:</div>
-    <div class="digit-column" id="m1"></div>
-    <div class="digit-column" id="m2"></div>
-    <div class="colon">:</div>
-    <div class="digit-column" id="s1"></div>
-    <div class="digit-column" id="s2"></div>
-  </div>
-  <script src="script.js"></script>
+    <!-- Background Music Element -->
+    <audio id="background-music" loop src="https://cdn.pixabay.com/audio/2022/02/10/audio_b28f1b7027.mp3"></audio>
+
+    <!-- Background Waves SVG -->
+    <div class="background-waves">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="var(--wave-color)" />
+            </g>
+        </svg>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <div class="clock-container">
+            <!-- Hours -->
+            <div class="time-group">
+                <div class="tumbler-wrapper" data-time-part="h1">
+                    <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
+                    <div class="scale-container"></div>
+                </div>
+                 <div class="tumbler-wrapper" data-time-part="h2">
+                    <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
+                    <div class="scale-container"></div>
+                </div>
+            </div>
+            
+            <div class="separator">:</div>
+
+            <!-- Minutes -->
+             <div class="time-group">
+                 <div class="tumbler-wrapper" data-time-part="m1">
+                    <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
+                    <div class="scale-container"></div>
+                </div>
+                 <div class="tumbler-wrapper" data-time-part="m2">
+                    <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
+                    <div class="scale-container"></div>
+                </div>
+            </div>
+            
+            <div class="separator">:</div>
+
+            <!-- Seconds -->
+            <div class="time-group">
+                 <div class="tumbler-wrapper" data-time-part="s1">
+                    <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
+                    <div class="scale-container"></div>
+                </div>
+                 <div class="tumbler-wrapper" data-time-part="s2">
+                    <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
+                    <div class="scale-container"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="date-container" class="date-display"></div>
+
+        <div class="quote-container">
+            <p id="quote-text" class="quote"></p>
+        </div>
+
+        <div class="controls-container">
+            <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
+            <button id="music-toggle" class="theme-button" aria-label="Toggle music"></button>
+        </div>
+
+        <footer class="signature">
+            Designed by Sanu
+        </footer>
+    </div>
+
+    <!-- Link to your external JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
