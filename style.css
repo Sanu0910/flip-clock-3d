@@ -290,33 +290,44 @@ body {
 }
 
 /* Styles for Music Selection */
-.music-selection-container {
-    /* display: none; /* Initially hidden - JavaScript will toggle this */
-    /* Using flex here and in JS, but could be block if preferred */
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem; /* Space between song items */
-    padding: 1rem;
-    border-radius: 1.5rem; /* Softer radius, similar to clock container */
-    background: var(--bg-color);
-    box-shadow: 9px 9px 16px var(--primary-shadow), -9px -9px 16px var(--secondary-shadow);
-    margin-top: 1.5rem; /* Space below the main controls */
-    width: 280px; /* Fixed width, or use max-width and width: 100% for responsiveness */
-    max-width: 90%; /* Ensure it doesn't overflow on small screens */
-    align-items: stretch; /* Stretch items to fill width */
-    transition: all var(--transition-speed) ease, opacity 0.5s ease, transform 0.5s ease;
-    z-index: 10; /* Ensure it's above wave background etc. */
-    /* For initial hidden state handled by JS, but good for fallback if JS fails or for animations */
-    /* opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none; */
+.controls-container {
+    position: relative; /* For positioning the dropdown relative to this container */
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line on smaller screens */
+    justify-content: center; /* Center buttons if they wrap */
+    gap: 1rem; /* Keep the gap definition */
 }
 
-/* .music-selection-container.visible {
+.music-selection-container {
+    position: absolute;
+    top: 100%; /* Position below the controls container */
+    left: 50%; /* Center relative to the controls container */
+    transform: translateX(-50%) translateY(-10px); /* Adjust Y for initial animation state */
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: var(--bg-color);
+    box-shadow: 9px 9px 16px var(--primary-shadow), -9px -9px 16px var(--secondary-shadow);
+    width: 250px; /* Slightly narrower for a dropdown feel */
+    max-width: 80%;
+    align-items: stretch;
+    z-index: 20; /* Ensure it's above other elements */
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+    /* Visibility transition should be immediate when opening */
+}
+
+.music-selection-container.open {
     opacity: 1;
-    transform: translateY(0);
+    visibility: visible;
+    transform: translateX(-50%) translateY(5px); /* Slide down slightly below the button */
     pointer-events: auto;
-} */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s;
+}
 
 .music-item-button {
     width: 100%; /* Make buttons fill container width */

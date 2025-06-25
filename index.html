@@ -368,7 +368,7 @@
             <button id="change-music-button" class="theme-button" aria-label="Change music"></button>
         </div>
 
-        <div id="music-selection-container" class="music-selection-container" style="display: none;">
+        <div id="music-selection-container" class="music-selection-container">
             <!-- Music list will be populated here by JavaScript -->
         </div>
 
@@ -430,7 +430,7 @@
                         backgroundMusic.src = song.src;
                         backgroundMusic.play();
                         playPauseMusicButton.innerHTML = pauseIcon;
-                        musicSelectionContainer.style.display = 'none'; // Hide list after selection
+                        musicSelectionContainer.classList.remove('open'); // Close dropdown after selection
                     });
                     musicSelectionContainer.appendChild(songItem);
                 });
@@ -439,6 +439,7 @@
             // --- Music Logic ---
             playPauseMusicButton.innerHTML = playIcon; // Start with play icon as music is initially paused or not playing
             changeMusicButton.innerHTML = changeMusicIcon; // Set icon for change music button
+            musicSelectionContainer.classList.remove('open'); // Ensure it's closed initially
 
             playPauseMusicButton.addEventListener('click', () => {
                 if (backgroundMusic.paused) {
@@ -451,10 +452,13 @@
             });
 
             changeMusicButton.addEventListener('click', () => {
-                if (musicSelectionContainer.style.display === 'none') {
-                    musicSelectionContainer.style.display = 'flex'; // Or 'block', depending on desired layout
-                } else {
-                    musicSelectionContainer.style.display = 'none';
+                musicSelectionContainer.classList.toggle('open');
+            });
+
+            // Close dropdown if clicked outside
+            document.addEventListener('click', (event) => {
+                if (!musicSelectionContainer.contains(event.target) && !changeMusicButton.contains(event.target)) {
+                    musicSelectionContainer.classList.remove('open');
                 }
             });
 
