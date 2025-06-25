@@ -31,6 +31,9 @@ body.theme-dark {
     --tick-bg: #6a717a;
     --wave-color: #232528;
 }
+body.theme-dark { /* Diagnostic: Force background color */
+    background-color: var(--bg-color) !important;
+}
 
 /* Theme: Forest */
 body.theme-forest {
@@ -45,6 +48,9 @@ body.theme-forest {
     --highlight-bg: #DCE5DC;
     --tick-bg: #9EAE9E;
     --wave-color: #B0C0B0;
+}
+body.theme-forest { /* Diagnostic: Force background color */
+    background-color: var(--bg-color) !important;
 }
 
 /* Theme: Ocean */
