@@ -1,55 +1,25 @@
-function padZero(num) {
-  return num < 10 ? '0' + num : num.toString();
+function createDigits(containerId) {
+  const col = document.getElementById(containerId);
+  for (let i = 0; i < 10; i++) {
+    const d = document.createElement('div');
+    d.className = 'digit';
+    d.textContent = i;
+    col.appendChild(d);
+  }
 }
 
-function createFlipUnit(containerId, currentValue) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = `
-    <div class="flip-card">
-      <div class="top" data-number="${currentValue}"></div>
-      <div class="bottom" data-number="${currentValue}"></div>
-    </div>
-  `;
-}
+['h1', 'h2', 'm1', 'm2', 's1', 's2'].forEach(createDigits);
 
-function updateFlipUnit(containerId, newValue) {
-  const container = document.getElementById(containerId);
-  const top = container.querySelector('.top');
-  const bottom = container.querySelector('.bottom');
-  const oldValue = top?.getAttribute('data-number');
-
-  if (oldValue === newValue) return;
-
-  top.setAttribute('data-number', oldValue);
-  bottom.setAttribute('data-number', newValue);
-
-  const card = container.querySelector('.flip-card');
-  card.classList.remove('flip-animate');
-  void card.offsetWidth; // trigger reflow
-  card.classList.add('flip-animate');
-
-  setTimeout(() => {
-    top.setAttribute('data-number', newValue);
-  }, 500);
-}
-
-function updateClock() {
+function updateTime() {
   const now = new Date();
-  const h = padZero(now.getHours());
-  const m = padZero(now.getMinutes());
-  const s = padZero(now.getSeconds());
-
-  updateFlipUnit('hour', h);
-  updateFlipUnit('minute', m);
-  updateFlipUnit('second', s);
+  const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
+  [...timeStr].forEach((num, i) => {
+    const id = ['h1', 'h2', 'm1', 'm2', 's1', 's2'][i];
+    const col = document.getElementById(id);
+    col.style.transition = 'transform 0.6s ease-in-out';
+    col.style.transform = `translateY(-${Number(num) * 80}px)`;
+  });
 }
 
-function initClock() {
-  const now = new Date();
-  createFlipUnit('hour', padZero(now.getHours()));
-  createFlipUnit('minute', padZero(now.getMinutes()));
-  createFlipUnit('second', padZero(now.getSeconds()));
-}
-
-initClock();
-setInterval(updateClock, 1000);
+updateTime();
+setInterval(updateTime, 1000);
