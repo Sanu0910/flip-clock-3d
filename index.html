@@ -4,18 +4,300 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sanu's Tumbler Clock</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Link to your external CSS file -->
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-color: #e0e5ec;
+            --primary-shadow: #a3b1c6;
+            --secondary-shadow: #ffffff;
+            --text-color: #9ba8bd;
+            --text-color-active: #3d5271;
+            --tumbler-bg: linear-gradient(145deg, #caced4, #f0f5fd);
+            --tumbler-shadow-inset1: #bec3c9;
+            --tumbler-shadow-inset2: #ffffff;
+            --highlight-bg: #e0e5ec;
+            --tick-bg: #a3b1c6;
+            --wave-color: #d1d9e6;
+            --tumbler-height: 100px;
+            --tumbler-font-size: 3rem;
+            --transition-speed: 0.3s;
+        }
+
+        body.dark {
+            /* Dark Theme */
+            --bg-color: #2c2f33;
+            --primary-shadow: #1e2022;
+            --secondary-shadow: #3a3e44;
+            --text-color: #6a717a;
+            --text-color-active: #e0e5ec;
+            --tumbler-bg: linear-gradient(145deg, #272a2d, #2f3236);
+            --tumbler-shadow-inset1: #242629;
+            --tumbler-shadow-inset2: #34383d;
+            --highlight-bg: #2c2f33;
+            --tick-bg: #6a717a;
+            --wave-color: #232528;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color var(--transition-speed) ease;
+            position: relative;
+        }
+        
+        .background-waves {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25vh;
+            z-index: 0;
+        }
+
+        .waves .parallax > use {
+            animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+        }
+        .waves .parallax > use:nth-child(1) {
+            animation-delay: -2s;
+            animation-duration: 7s;
+        }
+        .waves .parallax > use:nth-child(2) {
+            animation-delay: -3s;
+            animation-duration: 10s;
+        }
+        .waves .parallax > use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 13s;
+        }
+        .waves .parallax > use:nth-child(4) {
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        @keyframes move-forever {
+            0% {
+                transform: translate3d(-90px,0,0);
+            }
+            100% { 
+                transform: translate3d(85px,0,0);
+            }
+        }
+
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem; /* Adjusted gap */
+            position: relative;
+            z-index: 1;
+        }
+
+        .clock-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            border-radius: 2rem;
+            background: var(--bg-color);
+            box-shadow: 9px 9px 16px var(--primary-shadow), -9px -9px 16px var(--secondary-shadow);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .tumbler-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tumbler-unit {
+            width: 80px;
+            height: calc(var(--tumbler-height) * 3);
+            mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+            position: relative;
+        }
+        
+        .tumbler-strip-container {
+             width: 100%;
+             height: 100%;
+             border-radius: 50px;
+             background: var(--tumbler-bg);
+             box-shadow: inset 5px 5px 10px var(--tumbler-shadow-inset1), inset -5px -5px 10px var(--tumbler-shadow-inset2);
+             overflow: hidden;
+             position: relative;
+             transition: all var(--transition-speed) ease;
+        }
+
+        .tumbler-strip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            padding-top: var(--tumbler-height);
+        }
+
+        .tumbler-strip .number {
+            height: var(--tumbler-height);
+            line-height: var(--tumbler-height);
+            font-size: var(--tumbler-font-size);
+            font-weight: 400;
+            color: var(--text-color);
+            transition: all 0.5s ease;
+        }
+
+        .separator {
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: color var(--transition-speed) ease;
+        }
+        
+        .tumbler-unit::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: var(--highlight-bg);
+            border-radius: 50%;
+            box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
+            z-index: 1;
+            transition: all var(--transition-speed) ease;
+        }
+        
+        .tumbler-strip-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .scale-container {
+            height: calc(var(--tumbler-height) * 3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .tick {
+            width: 10px;
+            height: 2px;
+            background-color: var(--tick-bg);
+            border-radius: 1px;
+            transition: background-color var(--transition-speed) ease;
+        }
+        
+        .date-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color-active);
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            background: var(--bg-color);
+            box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .controls-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .theme-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            box-shadow: 5px 5px 10px var(--primary-shadow), -5px -5px 10px var(--secondary-shadow);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color-active);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .theme-button:active {
+            box-shadow: inset 5px 5px 10px var(--primary-shadow), inset -5px -5px 10px var(--secondary-shadow);
+        }
+        
+        .signature {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .quote-container {
+            min-height: 4em; /* Reserve space to prevent layout shift */
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .quote {
+            font-size: 1rem;
+            color: var(--text-color);
+            font-style: italic;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+        }
+
+        .quote.visible {
+            opacity: 1;
+        }
+
+        .quote-author {
+            display: block;
+            margin-top: 0.5rem;
+            font-style: normal;
+            font-weight: 600;
+            color: var(--text-color-active);
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --tumbler-height: 80px;
+                --tumbler-font-size: 2.5rem;
+            }
+             .clock-container { gap: 1rem; padding: 1.5rem; }
+             .tumbler-unit { width: 60px; }
+             .tumbler-unit::after { width: 55px; height: 55px; }
+             .separator { font-size: 2.5rem; }
+             .tick { width: 8px; }
+             .date-display { font-size: 1rem; }
+             .quote { font-size: 0.9rem; }
+        }
+         @media (max-width: 480px) {
+            :root {
+                --tumbler-height: 60px;
+                --tumbler-font-size: 2rem;
+            }
+             .main-wrapper { gap: 1rem; }
+             .clock-container { flex-direction: column; gap: 1rem; padding: 1rem; }
+             .time-group { display: flex; gap: 0.5rem; }
+             .tumbler-unit { width: 50px; }
+             .tumbler-unit::after { width: 45px; height: 45px; }
+             .separator { display: none; }
+             .scale-container { display: none; }
+             .date-display { font-size: 0.9rem; padding: 0.5rem 1rem; }
+             .quote { font-size: 0.8rem; }
+        }
+    </style>
 </head>
 <body>
     <!-- Background Music Element -->
     <audio id="background-music" loop src="https://cdn.pixabay.com/audio/2022/02/10/audio_b28f1b7027.mp3"></audio>
 
-    <!-- Background Waves SVG -->
     <div class="background-waves">
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
@@ -31,11 +313,10 @@
         </svg>
     </div>
 
-    <!-- Main Content Wrapper -->
     <div class="main-wrapper">
         <div class="clock-container">
             <!-- Hours -->
-            <div class="time-group">
+            <div class="time-group flex gap-2">
                 <div class="tumbler-wrapper" data-time-part="h1">
                     <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
                     <div class="scale-container"></div>
@@ -49,7 +330,7 @@
             <div class="separator">:</div>
 
             <!-- Minutes -->
-             <div class="time-group">
+             <div class="time-group flex gap-2">
                  <div class="tumbler-wrapper" data-time-part="m1">
                     <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
                     <div class="scale-container"></div>
@@ -63,7 +344,7 @@
             <div class="separator">:</div>
 
             <!-- Seconds -->
-            <div class="time-group">
+            <div class="time-group flex gap-2">
                  <div class="tumbler-wrapper" data-time-part="s1">
                     <div class="tumbler-unit"><div class="tumbler-strip-container"></div></div>
                     <div class="scale-container"></div>
@@ -91,7 +372,157 @@
         </footer>
     </div>
 
-    <!-- Link to your external JavaScript file -->
-    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tumblerWrappers = document.querySelectorAll('.tumbler-wrapper');
+            const tumblerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tumbler-height'));
+            const themeSwitcher = document.getElementById('theme-switcher');
+            const musicToggle = document.getElementById('music-toggle');
+            const backgroundMusic = document.getElementById('background-music');
+            const body = document.body;
+            const quoteText = document.getElementById('quote-text');
+            const dateContainer = document.getElementById('date-container');
+
+            const quotes = [
+                { text: "Time is what we want most, but what we use worst.", author: "William Penn" },
+                { text: "The two most powerful warriors are patience and time.", author: "Leo Tolstoy" },
+                { text: "Time is a created thing. To say 'I don't have time,' is like saying, 'I don't want to.'", author: "Lao Tzu" },
+                { text: "The future is something which everyone reaches at the rate of sixty minutes an hour, whatever he does, whoever he is.", author: "C.S. Lewis" },
+                { text: "A man who dares to waste one hour of time has not discovered the value of life.", author: "Charles Darwin" },
+                { text: "Your time is limited, so don’t waste it living someone else’s life.", author: "Steve Jobs" }
+            ];
+
+            let currentQuoteIndex = -1;
+            let lastDate = null;
+
+            // --- SVG Icons ---
+            const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+            const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+            const musicOnIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
+            const musicOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
+
+            // --- Music Logic ---
+            musicToggle.innerHTML = musicOffIcon;
+            musicToggle.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicToggle.innerHTML = musicOnIcon;
+                } else {
+                    backgroundMusic.pause();
+                    musicToggle.innerHTML = musicOffIcon;
+                }
+            });
+
+            // Date Logic
+            function updateDate() {
+                const now = new Date();
+                const dateString = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                if (dateString !== lastDate) {
+                    dateContainer.textContent = dateString;
+                    lastDate = dateString;
+                }
+            }
+
+            // Quote Logic
+            function showNewQuote() {
+                quoteText.classList.remove('visible');
+                setTimeout(() => {
+                    let newIndex;
+                    do { newIndex = Math.floor(Math.random() * quotes.length); } while (newIndex === currentQuoteIndex);
+                    currentQuoteIndex = newIndex;
+                    const quote = quotes[currentQuoteIndex];
+                    quoteText.innerHTML = `"${quote.text}" <span class="quote-author">- ${quote.author}</span>`;
+                    quoteText.classList.add('visible');
+                }, 1000);
+            }
+            
+            // Theme Switcher Logic
+            function setTheme(isDark) {
+                 body.classList.toggle('dark', isDark);
+                 themeSwitcher.innerHTML = isDark ? sunIcon : moonIcon;
+                 const waveUses = document.querySelectorAll('.waves .parallax > use');
+                 if(isDark){
+                    waveUses[0].setAttribute('fill', 'rgba(40, 43, 46, 0.7)');
+                    waveUses[1].setAttribute('fill', 'rgba(40, 43, 46, 0.5)');
+                    waveUses[2].setAttribute('fill', 'rgba(40, 43, 46, 0.3)');
+                 } else {
+                    waveUses[0].setAttribute('fill', 'rgba(255,255,255,0.7)');
+                    waveUses[1].setAttribute('fill', 'rgba(255,255,255,0.5)');
+                    waveUses[2].setAttribute('fill', 'rgba(255,255,255,0.3)');
+                 }
+            }
+            themeSwitcher.addEventListener('click', () => setTheme(!body.classList.contains('dark')));
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark);
+
+            // Create number strips and scales
+            tumblerWrappers.forEach(wrapper => {
+                const stripContainer = wrapper.querySelector('.tumbler-strip-container');
+                const scaleContainer = wrapper.querySelector('.scale-container');
+                const strip = document.createElement('div');
+                strip.classList.add('tumbler-strip');
+                const part = wrapper.dataset.timePart;
+                let maxDigit = 9;
+                if (part === 'h1') maxDigit = 2;
+                if (part === 'm1' || part === 's1') maxDigit = 5;
+                for (let i = 0; i <= maxDigit; i++) {
+                    const numberEl = document.createElement('div');
+                    numberEl.classList.add('number');
+                    numberEl.textContent = i;
+                    strip.appendChild(numberEl);
+                    if (scaleContainer) {
+                        const tickEl = document.createElement('div');
+                        tickEl.classList.add('tick');
+                        scaleContainer.appendChild(tickEl);
+                    }
+                }
+                stripContainer.appendChild(strip);
+            });
+
+            // Clock Logic
+            function updateClock() {
+                const now = new Date();
+                const hoursStr = String(now.getHours()).padStart(2, '0');
+                const minutesStr = String(now.getMinutes()).padStart(2, '0');
+                const secondsStr = String(now.getSeconds()).padStart(2, '0');
+                updateTumbler('h1', hoursStr[0]);
+                updateTumbler('h2', hoursStr[1]);
+                updateTumbler('m1', minutesStr[0]);
+                updateTumbler('m2', minutesStr[1]);
+                updateTumbler('s1', secondsStr[0]);
+                updateTumbler('s2', secondsStr[1]);
+            }
+
+            function updateTumbler(part, value) {
+                const tumblerWrapper = document.querySelector(`[data-time-part="${part}"]`);
+                if (!tumblerWrapper) return;
+                const tumblerStrip = tumblerWrapper.querySelector('.tumbler-strip');
+                const valueIndex = parseInt(value, 10);
+                const yOffset = -valueIndex * tumblerHeight;
+                tumblerStrip.style.transform = `translateY(${yOffset}px)`;
+                const numbers = tumblerStrip.querySelectorAll('.number');
+                const activeColor = getComputedStyle(body).getPropertyValue('--text-color-active');
+                const inactiveColor = getComputedStyle(body).getPropertyValue('--text-color');
+                numbers.forEach((num, index) => {
+                    if (index === valueIndex) {
+                        num.style.color = activeColor;
+                        num.style.fontWeight = '600';
+                    } else {
+                        num.style.color = inactiveColor;
+                        num.style.fontWeight = '400';
+                    }
+                });
+            }
+            
+            // Initial calls & intervals
+            setInterval(updateClock, 1000);
+            updateClock();
+            updateDate();
+            setInterval(updateDate, 60000); 
+            showNewQuote();
+            setInterval(showNewQuote, 10000); 
+        });
+    </script>
 </body>
 </html>
