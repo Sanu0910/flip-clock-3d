@@ -364,7 +364,12 @@
 
         <div class="controls-container">
             <button id="theme-switcher" class="theme-button" aria-label="Toggle theme"></button>
-            <button id="music-toggle" class="theme-button" aria-label="Toggle music"></button>
+            <button id="play-pause-music-button" class="theme-button" aria-label="Play/Pause music"></button>
+            <button id="change-music-button" class="theme-button" aria-label="Change music"></button>
+        </div>
+
+        <div id="music-selection-container" class="music-selection-container" style="display: none;">
+            <!-- Music list will be populated here by JavaScript -->
         </div>
 
         <footer class="signature">
@@ -399,20 +404,66 @@
             // --- SVG Icons ---
             const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
             const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-            const musicOnIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
-            const musicOffIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>`;
+            const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+            const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+            const changeMusicIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><path d="m12 6 3.536 3.536a2 2 0 0 1 0 2.828L12 16"></path></svg>`; // Example, you might want a different icon
+
+            const playPauseMusicButton = document.getElementById('play-pause-music-button');
+            const changeMusicButton = document.getElementById('change-music-button');
+            const musicSelectionContainer = document.getElementById('music-selection-container');
+
+            const songs = [
+                { name: "Clear Water", src: "clear-water-239684.mp3" },
+                { name: "Evening By The Sea", src: "evening-by-the-sea-364906.mp3" },
+                { name: "Lost In Dreams", src: "lost-in-dreams-abstract-chill-downtempo-cinematic-future-beats-270241.mp3" },
+                { name: "Melody of Nature", src: "melody-of-nature-main-6672.mp3" },
+                { name: "Night Sky Lofi", src: "night-sky-lofi-156772.mp3" }
+            ];
+
+            function populateMusicList() {
+                musicSelectionContainer.innerHTML = ''; // Clear existing items
+                songs.forEach(song => {
+                    const songItem = document.createElement('button');
+                    songItem.classList.add('music-item-button'); // Add a class for styling
+                    songItem.textContent = song.name;
+                    songItem.addEventListener('click', () => {
+                        backgroundMusic.src = song.src;
+                        backgroundMusic.play();
+                        playPauseMusicButton.innerHTML = pauseIcon;
+                        musicSelectionContainer.style.display = 'none'; // Hide list after selection
+                    });
+                    musicSelectionContainer.appendChild(songItem);
+                });
+            }
 
             // --- Music Logic ---
-            musicToggle.innerHTML = musicOffIcon;
-            musicToggle.addEventListener('click', () => {
+            playPauseMusicButton.innerHTML = playIcon; // Start with play icon as music is initially paused or not playing
+            changeMusicButton.innerHTML = changeMusicIcon; // Set icon for change music button
+
+            playPauseMusicButton.addEventListener('click', () => {
                 if (backgroundMusic.paused) {
                     backgroundMusic.play();
-                    musicToggle.innerHTML = musicOnIcon;
+                    playPauseMusicButton.innerHTML = pauseIcon;
                 } else {
                     backgroundMusic.pause();
-                    musicToggle.innerHTML = musicOffIcon;
+                    playPauseMusicButton.innerHTML = playIcon;
                 }
             });
+
+            changeMusicButton.addEventListener('click', () => {
+                if (musicSelectionContainer.style.display === 'none') {
+                    musicSelectionContainer.style.display = 'flex'; // Or 'block', depending on desired layout
+                } else {
+                    musicSelectionContainer.style.display = 'none';
+                }
+            });
+
+            // Initialize music
+            if (songs.length > 0) {
+                 backgroundMusic.src = songs[0].src; // Set default song
+            }
+            populateMusicList();
+
 
             // Date Logic
             function updateDate() {
