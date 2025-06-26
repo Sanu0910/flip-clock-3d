@@ -31,9 +31,7 @@ body.theme-dark {
     --tick-bg: #6a717a;
     --wave-color: #232528;
 }
-body.theme-dark { /* Diagnostic: Force background color */
-    background-color: var(--bg-color) !important;
-}
+/* Removed diagnostic rule for theme-dark */
 
 /* Theme: Forest */
 body.theme-forest {
@@ -49,9 +47,7 @@ body.theme-forest {
     --tick-bg: #9EAE9E;
     --wave-color: #B0C0B0;
 }
-body.theme-forest { /* Diagnostic: Force background color */
-    background-color: var(--bg-color) !important;
-}
+/* Removed diagnostic rule for theme-forest */
 
 /* Theme: Ocean */
 body.theme-ocean {
@@ -113,7 +109,22 @@ body.theme-monochrome {
     --wave-color: #A0A0A0;
 }
 
-body {
+/* Theme: Low Light */
+body.theme-lowlight {
+    --bg-color: #1A1D24;
+    --primary-shadow: #14161C;
+    --secondary-shadow: #282C38;
+    --text-color: #9DA5B4;
+    --text-color-active: #D0D8E8;
+    --tumbler-bg: linear-gradient(145deg, #161920, #1e2128);
+    --tumbler-shadow-inset1: #12141A;
+    --tumbler-shadow-inset2: #222630;
+    --highlight-bg: #1A1D24;
+    --tick-bg: #5A6378;
+    --wave-color: #2F3545;
+}
+
+html body { /* Increased specificity */
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     display: flex;
